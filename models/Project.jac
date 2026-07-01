@@ -1,4 +1,4 @@
-import from models.task { Task }
+import from .Task { Task }
 
 node Project {
     has name: str = "PROJECT_NAME",

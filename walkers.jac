@@ -1,5 +1,5 @@
-import from models.project { Project, create_root_project }
-import from models.task { Task }
+import from models.Project { Project, create_root_project }
+import from models.Task { Task }
 
 walker Visitor {
     can start with Root entry {

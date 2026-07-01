@@ -1,4 +1,4 @@
-sv import from ..main { Project }
+sv import from ..models.Project { Project }
 
 def:pub ProjectItem(
     project: Project
