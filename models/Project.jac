@@ -45,3 +45,12 @@ def:pub create_root_project(name: str, tldr: str) -> Project {
 def:pub get_projects -> list[Project] {
     return [root-->][?:Project];
 }
+
+def:pub get_project(id: str) -> Project | None {
+    for p in [root-->][?:Project] {
+        if jid(p) == id {
+            return p;
+        }
+    }
+    return None;
+}
