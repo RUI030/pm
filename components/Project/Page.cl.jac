@@ -59,7 +59,7 @@ def:pub Page -> JsxElement {
                             <h1 class="project-header-name">{project.name}</h1>
                             <p class="project-header-tldr">{project.tldr}</p>
                         </div>
-                        <ProjectPanel parent_id={jid(project)} onSelectProject={select_sub_project} />
+                        <ProjectPanel key={jid(project)} parent_id={jid(project)} onSelectProject={select_sub_project} />
                     </div>
                 )}
             </main>
