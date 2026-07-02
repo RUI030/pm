@@ -54,3 +54,12 @@ def:pub get_project(id: str) -> Project | None {
     }
     return None;
 }
+
+def:pub get_parent(id: str) -> Project | None {
+    p = get_project(id);
+    if p is None {
+        return None;
+    }
+    parents = [p <--][?:Project];
+    return parents[0] if parents else None;
+}

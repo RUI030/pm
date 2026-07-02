@@ -3,19 +3,26 @@ import "../styles/Project.css";
 
 import from "@jac/runtime" { useParams, useNavigate }
 
-sv import from ...models.Project { Project, get_project }
+sv import from ...models.Project { Project, get_project, get_parent }
 
 def:pub Page -> JsxElement {
     has project: Project | None = None;
+    has parent_id: str | None = None;
     params = useParams();
     nav = useNavigate();
 
     async can with entry {
         project = await get_project(str(params["id"]));
+        parent = await get_parent(str(params["id"]));
+        parent_id = jid(parent) if parent else None;
     }
 
     def go_home(e: MouseEvent) {
         nav("/");
+    }
+
+    def go_back(e: MouseEvent) {
+        nav("/project/" + parent_id) if parent_id else nav("/");
     }
 
     return
@@ -30,7 +37,9 @@ def:pub Page -> JsxElement {
                     <div class="project-page-empty">Project not found.</div>
                 ) if project is None else (
                     <div class="project-header">
-                        <button class="btn-ghost back-link" onClick={go_home}>← All projects</button>
+                        <button class="btn-ghost back-link" onClick={go_back}>
+                            {"← Back to parent" if parent_id else "← All projects"}
+                        </button>
                         <h1 class="project-header-name">{project.name}</h1>
                         <p class="project-header-tldr">{project.tldr}</p>
                     </div>
