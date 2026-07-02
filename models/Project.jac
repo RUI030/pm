@@ -55,7 +55,7 @@ node Project {
         return project[0];
     }
 
-    def:pub plan(request: str) -> str by llm(tools=[self.draft_task, self.draft_sub_project]);
+    def:pub plan(prompt: str) -> str by llm(tools=[self.draft_task, self.draft_sub_project]);
 }
 
 sem Project.draft_task = "Create a single new draft task directly under this project.";
@@ -66,7 +66,7 @@ sem Project.draft_sub_project.name = "A short name for the sub-project.";
 sem Project.draft_sub_project.tldr = "One sentence describing the sub-project's goal.";
 
 sem Project.plan = "Given a free-text request describing work to be done, decide what belongs directly under this project: create draft tasks for concrete single-step actions, or create draft sub-projects when part of the request needs further breakdown into multiple steps. Only plan ONE level deep - do not try to plan multiple layers in a single call.";
-sem Project.plan.request = "The user's free-text description of what they want done.";
+sem Project.plan.prompt = "The user's free-text description of what they want done.";
 
 def:pub create_root_project(name: str, tldr: str) -> Project {
     project = root ++> Project(name=name, tldr=tldr);
@@ -136,10 +136,10 @@ def:pub create_task(project_id: str, title: str) -> Task | None {
     return p.create_task(title);
 }
 
-def:pub plan_children(node_id: str, request: str) -> str {
+def:pub plan_children(node_id: str, prompt: str) -> str {
     p = get_project(node_id);
     if p is None {
         return "Project not found.";
     }
-    return p.plan(request);
+    return p.plan(prompt);
 }

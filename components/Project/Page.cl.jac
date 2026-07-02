@@ -3,13 +3,16 @@ import "../styles/Project.css";
 
 import from "@jac/runtime" { useParams, useNavigate }
 
-sv import from ...models.Project { Project, get_project, get_parent }
+sv import from ...models.Project { Project, get_project, get_parent, plan_children }
 import from .Panel { Panel as ProjectPanel }
 import from ..Task.Panel { Panel as TaskPanel }
 
 def:pub Page -> JsxElement {
     has project: Project | None = None;
     has parent_id: str | None = None;
+    has plan_request: str = "";
+    has planning: bool = False;
+    has plan_version: int = 0;
     params = useParams();
     nav = useNavigate();
 
@@ -41,6 +44,16 @@ def:pub Page -> JsxElement {
         nav("/project/" + id);
     }
 
+    async def run_plan {
+        if project is not None and plan_request.strip() {
+            planning = True;
+            await plan_children(jid(project), plan_request.strip());
+            plan_request = "";
+            planning = False;
+            plan_version = plan_version + 1;
+        }
+    }
+
     return
         <div class="app">
             <header class="header">
@@ -60,8 +73,25 @@ def:pub Page -> JsxElement {
                             <h1 class="project-header-name">{project.name}</h1>
                             <p class="project-header-tldr">{project.tldr}</p>
                         </div>
-                        <TaskPanel key={"task-" + jid(project)} project_id={jid(project)} />
-                        <ProjectPanel key={"project-" + jid(project)} parent_id={jid(project)} onSelectProject={select_sub_project} />
+                        <div class="panel-section new-form-wrapper">
+                            <div class="new-form-title">Plan with AI</div>
+                            <div class="new-form-row">
+                                <input
+                                    class="input"
+                                    value={plan_request}
+                                    onChange={lambda e: ChangeEvent { plan_request = e.target.value; }}
+                                    onKeyPress={lambda e: KeyboardEvent {
+                                        if e.key == "Enter" { run_plan(); }}
+                                    }
+                                    placeholder="Describe what needs to get done..."
+                                />
+                                <button class="btn-primary" onClick={run_plan}>
+                                    {"Planning..." if planning else "Plan"}
+                                </button>
+                            </div>
+                        </div>
+                        <TaskPanel key={"task-" + jid(project) + "-" + str(plan_version)} project_id={jid(project)} />
+                        <ProjectPanel key={"project-" + jid(project) + "-" + str(plan_version)} parent_id={jid(project)} onSelectProject={select_sub_project} />
                     </div>
                 )}
             </main>
