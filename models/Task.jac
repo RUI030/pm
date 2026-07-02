@@ -1,7 +1,8 @@
 node Task {
     has title: str = "Fix the frontend broken form input and submission.",
         alias: str = "Verb-Noun",
-        notes: str = "";
+        notes: str = "",
+        is_draft: bool = False;
 
     def get_title() -> str {
         return self.title;
@@ -33,3 +34,5 @@ node Task {
 
 sem Task.title = "Describe the task in 1 sentence.";
 sem Task.alias = "An easy to read, verb-noun structured 2-word high level abstraction of the Task generate fron the task title. All lower case and seperate 2 word by space";
+sem Task.gen_alias = "Generate a short, scannable alias for a task, capturing its single most important goal or action - not just whatever word appears first in the title. Respond with ONLY the final alias, no explanation or reasoning.";
+sem Task.gen_alias.title = "The task's full title text to summarize into a short alias.";
