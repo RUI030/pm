@@ -1,4 +1,4 @@
-import from models.Project { Project, create_root_project }
+import from models.Project { Project, create_root_project, get_project }
 import from models.Task { Task }
 
 walker Visitor {
@@ -30,6 +30,15 @@ walker Cleaner {
         print(f"[Delete] (Task) {here.get_alias()}");
         del here;
     }
+}
+
+def:pub delete_project(id: str) -> bool {
+    p = get_project(id);
+    if p is None {
+        return False;
+    }
+    p spawn Cleaner();
+    return True;
 }
 
 def:pub test_home() -> int {

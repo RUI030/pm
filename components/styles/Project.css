@@ -121,8 +121,21 @@
 
 .project-card-footer {
     display: flex;
-    justify-content: flex-end;
+    align-items: center;
+    justify-content: space-between;
     margin-top: 16px;
+}
+
+.delete-link {
+    height: 28px;
+    padding: 0 10px;
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+.delete-link:hover {
+    color: #dc2626;
+    background: rgba(220,38,38,0.08);
 }
 
 .card-arrow {

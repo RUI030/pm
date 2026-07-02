@@ -2,7 +2,7 @@ import from "@jac/runtime" { useNavigate }
 
 sv import from ...models.Project { Project }
 
-def:pub Item(project: Project, onSelect: Callable[([str], None)] | None = None) -> JsxElement {
+def:pub Item(project: Project, onSelect: Callable[([str], None)] | None = None, onDelete: Callable[([str], None)] | None = None) -> JsxElement {
     nav = useNavigate();
 
     def go_to_project(e: MouseEvent) {
@@ -13,6 +13,13 @@ def:pub Item(project: Project, onSelect: Callable[([str], None)] | None = None) 
         }
     }
 
+    def handle_delete(e: MouseEvent) {
+        e.stopPropagation();
+        if onDelete {
+            onDelete(jid(project));
+        }
+    }
+
     return
         <div class="project-card" onClick={go_to_project}>
             <div class="project-card-body">
@@ -20,6 +27,7 @@ def:pub Item(project: Project, onSelect: Callable[([str], None)] | None = None) 
                 <div class="project-tldr">{project.tldr}</div>
             </div>
             <div class="project-card-footer">
+                {(<button class="btn-ghost delete-link" onClick={handle_delete}>Delete</button>) if onDelete else None}
                 <span class="card-arrow">→</span>
             </div>
         </div>;

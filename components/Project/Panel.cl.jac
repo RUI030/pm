@@ -1,6 +1,7 @@
 import "../styles/Project.css";
 
 sv import from ...models.Project { Project, create_root_project, create_sub_project, get_projects, get_sub_projects }
+sv import from ...walkers { delete_project }
 import from .Item { Item as ProjectItem }
 
 def:pub Panel(parent_id: str | None = None, onSelectProject: Callable[([str], None)] | None = None) -> JsxElement {
@@ -31,6 +32,13 @@ def:pub Panel(parent_id: str | None = None, onSelectProject: Callable[([str], No
             new_name = "";
             new_tldr = "";
             show_form = False;
+        }
+    }
+
+    async def remove_project(id: str) {
+        ok = await delete_project(id);
+        if ok {
+            projects = [p for p in projects if jid(p) != id];
         }
     }
 
@@ -86,7 +94,7 @@ def:pub Panel(parent_id: str | None = None, onSelectProject: Callable[([str], No
             ) if len(projects) == 0 and not show_form else None}
             <div class="project-grid">
                 {[
-                    <ProjectItem key={jid(p)} project={p} onSelect={onSelectProject} /> for p in projects
+                    <ProjectItem key={jid(p)} project={p} onSelect={onSelectProject} onDelete={remove_project} /> for p in projects
                 ]}
             </div>
         </div>;

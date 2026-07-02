@@ -1,7 +1,7 @@
 """Main entry point for pm."""
 
 import from models.Project { Project, create_root_project, create_sub_project, get_projects, get_project, get_parent, get_sub_projects }
-import from walkers { Visitor, Cleaner, test_home }
+import from walkers { Visitor, Cleaner, test_home, delete_project }
 
 cl import from "@jac/runtime" { Router, Routes, Route }
 cl import from components.HomePage { HomePage }
