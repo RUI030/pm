@@ -30,7 +30,11 @@ node Project {
 
     def:pub create_task(title: str) -> Task {
         task = self ++> Task(title=title);
-        task[0].update_alias(task[0].gen_alias(task[0].get_title()));
+        try {
+            task[0].update_alias(task[0].gen_alias(task[0].get_title()));
+        } except Exception as e {
+            print(f"[Warn] alias generation failed for task {jid(task[0])}: {str(e)}");
+        }
         print(f"[Create] task {task[0].get_alias()}, parent is {self.name}");
         return task[0];
     }
@@ -86,4 +90,20 @@ def:pub create_sub_project(parent_id: str, name: str, tldr: str) -> Project | No
         return None;
     }
     return parent.create_sub_project(name, tldr);
+}
+
+def:pub get_tasks(project_id: str) -> list[Task] {
+    p = get_project(project_id);
+    if p is None {
+        return [];
+    }
+    return [p-->][?:Task];
+}
+
+def:pub create_task(project_id: str, title: str) -> Task | None {
+    p = get_project(project_id);
+    if p is None {
+        return None;
+    }
+    return p.create_task(title);
 }

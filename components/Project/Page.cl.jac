@@ -5,6 +5,7 @@ import from "@jac/runtime" { useParams, useNavigate }
 
 sv import from ...models.Project { Project, get_project, get_parent }
 import from .Panel { Panel as ProjectPanel }
+import from ..Task.Panel { Panel as TaskPanel }
 
 def:pub Page -> JsxElement {
     has project: Project | None = None;
@@ -59,6 +60,7 @@ def:pub Page -> JsxElement {
                             <h1 class="project-header-name">{project.name}</h1>
                             <p class="project-header-tldr">{project.tldr}</p>
                         </div>
+                        <TaskPanel key={jid(project)} project_id={jid(project)} />
                         <ProjectPanel key={jid(project)} parent_id={jid(project)} onSelectProject={select_sub_project} />
                     </div>
                 )}

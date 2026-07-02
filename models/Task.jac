@@ -21,7 +21,11 @@ node Task {
 
     def:pub create_task(title: str) -> Task {
         task = self ++> Task(title=title);
-        task[0].update_alias(task[0].gen_alias(task[0].get_title()));
+        try {
+            task[0].update_alias(task[0].gen_alias(task[0].get_title()));
+        } except Exception as e {
+            print(f"[Warn] alias generation failed for task {jid(task[0])}: {str(e)}");
+        }
         print(f"[Create] task {task[0].alias}, parent is {self.title}");
         return task[0];
     }

@@ -43,7 +43,7 @@ def:pub Panel(parent_id: str | None = None, onSelectProject: Callable[([str], No
     }
 
     return
-        <div>
+        <div class="panel-section">
             <div class="section-header">
                 <div>
                     <span class="section-title">{"Sub-projects" if parent_id else "Projects"}</span>

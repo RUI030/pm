@@ -41,6 +41,20 @@ def:pub delete_project(id: str) -> bool {
     return True;
 }
 
+def:pub delete_task(project_id: str, task_id: str) -> bool {
+    p = get_project(project_id);
+    if p is None {
+        return False;
+    }
+    for t in [p-->][?:Task] {
+        if jid(t) == task_id {
+            t spawn Cleaner();
+            return True;
+        }
+    }
+    return False;
+}
+
 def:pub test_home() -> int {
     root spawn Cleaner();
     this_project = create_root_project("aaa", "aaaa");
