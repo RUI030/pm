@@ -45,6 +45,20 @@ walker FindTask {
     }
 }
 
+walker Approver {
+    can with Root entry {
+        visit [-->];
+    }
+    can approve_project with Project entry {
+        here.is_draft = False;
+        visit [-->];
+    }
+    can approve_task with Task entry {
+        here.is_draft = False;
+        visit [-->];
+    }
+}
+
 def:pub delete_project(id: str) -> bool {
     p = get_project(id);
     if p is None {
@@ -64,6 +78,28 @@ def:pub delete_task(project_id: str, task_id: str) -> bool {
         return False;
     }
     result.found spawn Cleaner();
+    return True;
+}
+
+def:pub approve_project(id: str) -> bool {
+    p = get_project(id);
+    if p is None {
+        return False;
+    }
+    p spawn Approver();
+    return True;
+}
+
+def:pub approve_task(project_id: str, task_id: str) -> bool {
+    p = get_project(project_id);
+    if p is None {
+        return False;
+    }
+    result = p spawn FindTask(task_id=task_id);
+    if result.found is None {
+        return False;
+    }
+    result.found spawn Approver();
     return True;
 }
 

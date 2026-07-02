@@ -77,6 +77,11 @@
     overflow: hidden;
 }
 
+.project-card.draft-card {
+    background: #fffbeb;
+    border: 1px dashed #fbbf24;
+}
+
 .project-card::before {
     content: "";
     position: absolute;

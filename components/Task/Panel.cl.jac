@@ -2,7 +2,7 @@ import "../styles/Task.css";
 
 sv import from ...models.Task { Task }
 sv import from ...models.Project { get_tasks, create_task }
-sv import from ...walkers { delete_task }
+sv import from ...walkers { delete_task, approve_task }
 import from .Item { Item as TaskItem }
 
 def:pub Panel(project_id: str) -> JsxElement {
@@ -11,9 +11,13 @@ def:pub Panel(project_id: str) -> JsxElement {
         show_form: bool = False,
         loaded: bool = False;
 
-    async can with entry {
+    async def refresh {
         tasks = await get_tasks(project_id);
         loaded = True;
+    }
+
+    async can with entry {
+        await refresh();
     }
 
     async def add_task {
@@ -31,6 +35,13 @@ def:pub Panel(project_id: str) -> JsxElement {
         ok = await delete_task(project_id, id);
         if ok {
             tasks = [t for t in tasks if jid(t) != id];
+        }
+    }
+
+    async def approve_task_item(id: str) {
+        ok = await approve_task(project_id, id);
+        if ok {
+            await refresh();
         }
     }
 
@@ -78,7 +89,7 @@ def:pub Panel(project_id: str) -> JsxElement {
             <table class="task-table">
                 <tbody>
                     {[
-                        <TaskItem key={jid(t)} task={t} onDelete={remove_task} /> for t in tasks
+                        <TaskItem key={jid(t)} task={t} onDelete={remove_task} onApprove={approve_task_item} /> for t in tasks
                     ]}
                 </tbody>
             </table>

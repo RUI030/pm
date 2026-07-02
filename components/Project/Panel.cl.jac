@@ -1,7 +1,7 @@
 import "../styles/Project.css";
 
 sv import from ...models.Project { Project, create_root_project, create_sub_project, get_projects, get_sub_projects }
-sv import from ...walkers { delete_project }
+sv import from ...walkers { delete_project, approve_project }
 import from .Item { Item as ProjectItem }
 
 def:pub Panel(parent_id: str | None = None, onSelectProject: Callable[([str], None)] | None = None) -> JsxElement {
@@ -11,13 +11,17 @@ def:pub Panel(parent_id: str | None = None, onSelectProject: Callable[([str], No
         show_form: bool = False,
         loaded: bool = False;
 
-    async can with entry {
+    async def refresh {
         if parent_id {
             projects = await get_sub_projects(parent_id);
         } else {
             projects = await get_projects();
         }
         loaded = True;
+    }
+
+    async can with entry {
+        await refresh();
     }
 
     async def add_project {
@@ -41,6 +45,13 @@ def:pub Panel(parent_id: str | None = None, onSelectProject: Callable[([str], No
         ok = await delete_project(id);
         if ok {
             projects = [p for p in projects if jid(p) != id];
+        }
+    }
+
+    async def approve_project_item(id: str) {
+        ok = await approve_project(id);
+        if ok {
+            await refresh();
         }
     }
 
@@ -96,7 +107,7 @@ def:pub Panel(parent_id: str | None = None, onSelectProject: Callable[([str], No
             ) if loaded and len(projects) == 0 and not show_form else None}
             <div class="project-grid">
                 {[
-                    <ProjectItem key={jid(p)} project={p} onSelect={onSelectProject} onDelete={remove_project} /> for p in projects
+                    <ProjectItem key={jid(p)} project={p} onSelect={onSelectProject} onDelete={remove_project} onApprove={approve_project_item} /> for p in projects
                 ]}
             </div>
         </div>;

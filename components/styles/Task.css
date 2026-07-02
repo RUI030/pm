@@ -22,6 +22,10 @@
     background: var(--surface-hover, rgba(0, 0, 0, 0.02));
 }
 
+.task-row.draft-row {
+    background: #fffbeb;
+}
+
 .task-alias,
 .task-title,
 .task-actions {
