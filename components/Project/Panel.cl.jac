@@ -8,7 +8,8 @@ def:pub Panel(parent_id: str | None = None, onSelectProject: Callable[([str], No
     has projects: list[Project] = [],
         new_name: str = "",
         new_tldr: str = "",
-        show_form: bool = False;
+        show_form: bool = False,
+        loaded: bool = False;
 
     async can with entry {
         if parent_id {
@@ -16,6 +17,7 @@ def:pub Panel(parent_id: str | None = None, onSelectProject: Callable[([str], No
         } else {
             projects = await get_projects();
         }
+        loaded = True;
     }
 
     async def add_project {
@@ -91,7 +93,7 @@ def:pub Panel(parent_id: str | None = None, onSelectProject: Callable[([str], No
                         + New Project
                     </button>
                 </div>
-            ) if len(projects) == 0 and not show_form else None}
+            ) if loaded and len(projects) == 0 and not show_form else None}
             <div class="project-grid">
                 {[
                     <ProjectItem key={jid(p)} project={p} onSelect={onSelectProject} onDelete={remove_project} /> for p in projects

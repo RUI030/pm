@@ -8,10 +8,12 @@ import from .Item { Item as TaskItem }
 def:pub Panel(project_id: str) -> JsxElement {
     has tasks: list[Task] = [],
         new_title: str = "",
-        show_form: bool = False;
+        show_form: bool = False,
+        loaded: bool = False;
 
     async can with entry {
         tasks = await get_tasks(project_id);
+        loaded = True;
     }
 
     async def add_task {
@@ -72,15 +74,13 @@ def:pub Panel(project_id: str) -> JsxElement {
                         + New Task
                     </button>
                 </div>
-            ) if len(tasks) == 0 and not show_form else None}
-            {(
-                <table class="task-table">
-                    <tbody>
-                        {[
-                            <TaskItem key={jid(t)} task={t} onDelete={remove_task} /> for t in tasks
-                        ]}
-                    </tbody>
-                </table>
-            ) if len(tasks) > 0 else None}
+            ) if loaded and len(tasks) == 0 and not show_form else None}
+            <table class="task-table">
+                <tbody>
+                    {[
+                        <TaskItem key={jid(t)} task={t} onDelete={remove_task} /> for t in tasks
+                    ]}
+                </tbody>
+            </table>
         </div>;
 }

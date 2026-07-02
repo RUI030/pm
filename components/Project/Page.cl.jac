@@ -60,8 +60,8 @@ def:pub Page -> JsxElement {
                             <h1 class="project-header-name">{project.name}</h1>
                             <p class="project-header-tldr">{project.tldr}</p>
                         </div>
-                        <TaskPanel key={jid(project)} project_id={jid(project)} />
-                        <ProjectPanel key={jid(project)} parent_id={jid(project)} onSelectProject={select_sub_project} />
+                        <TaskPanel key={"task-" + jid(project)} project_id={jid(project)} />
+                        <ProjectPanel key={"project-" + jid(project)} parent_id={jid(project)} onSelectProject={select_sub_project} />
                     </div>
                 )}
             </main>
