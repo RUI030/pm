@@ -46,13 +46,12 @@ def:pub delete_task(project_id: str, task_id: str) -> bool {
     if p is None {
         return False;
     }
-    for t in [p-->][?:Task] {
-        if jid(t) == task_id {
-            t spawn Cleaner();
-            return True;
-        }
+    matches = [t for t in [p-->][?:Task] if jid(t) == task_id];
+    if len(matches) == 0 {
+        return False;
     }
-    return False;
+    matches[0] spawn Cleaner();
+    return True;
 }
 
 def:pub test_home() -> int {
