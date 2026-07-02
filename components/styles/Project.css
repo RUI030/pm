@@ -162,3 +162,34 @@
     color: var(--text-secondary);
     margin-bottom: 20px;
 }
+
+/* ── Project Detail Header ── */
+.project-header {
+    margin-bottom: 32px;
+}
+
+.back-link {
+    margin-left: -12px;
+    margin-bottom: 12px;
+}
+
+.project-header-name {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: -0.3px;
+    margin-bottom: 8px;
+}
+
+.project-header-tldr {
+    font-size: 15px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    max-width: 640px;
+}
+
+.project-page-empty {
+    text-align: center;
+    padding: 80px 24px;
+    color: var(--text-secondary);
+}
