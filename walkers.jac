@@ -32,6 +32,19 @@ walker Cleaner {
     }
 }
 
+walker FindTask {
+    has task_id: str;
+    has found: Task | None = None;
+
+    can search with Project entry {
+        for t in [-->][?:Task] {
+            if jid(t) == self.task_id {
+                self.found = t;
+            }
+        }
+    }
+}
+
 def:pub delete_project(id: str) -> bool {
     p = get_project(id);
     if p is None {
@@ -46,11 +59,11 @@ def:pub delete_task(project_id: str, task_id: str) -> bool {
     if p is None {
         return False;
     }
-    matches = [t for t in [p-->][?:Task] if jid(t) == task_id];
-    if len(matches) == 0 {
+    result = p spawn FindTask(task_id=task_id);
+    if result.found is None {
         return False;
     }
-    matches[0] spawn Cleaner();
+    result.found spawn Cleaner();
     return True;
 }
 
