@@ -2,11 +2,15 @@ import from "@jac/runtime" { useNavigate }
 
 sv import from ...models.Project { Project }
 
-def:pub Item(project: Project) -> JsxElement {
+def:pub Item(project: Project, onSelect: Callable[([str], None)] | None = None) -> JsxElement {
     nav = useNavigate();
 
     def go_to_project(e: MouseEvent) {
-        nav("/project/" + jid(project));
+        if onSelect {
+            onSelect(jid(project));
+        } else {
+            nav("/project/" + jid(project));
+        }
     }
 
     return

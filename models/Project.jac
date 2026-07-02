@@ -46,13 +46,21 @@ def:pub get_projects -> list[Project] {
     return [root-->][?:Project];
 }
 
-def:pub get_project(id: str) -> Project | None {
-    for p in [root-->][?:Project] {
+def _find_project(id: str, candidates: list[Project]) -> Project | None {
+    for p in candidates {
         if jid(p) == id {
             return p;
         }
+        found = _find_project(id, [p-->][?:Project]);
+        if found {
+            return found;
+        }
     }
     return None;
+}
+
+def:pub get_project(id: str) -> Project | None {
+    return _find_project(id, [root-->][?:Project]);
 }
 
 def:pub get_parent(id: str) -> Project | None {
@@ -62,4 +70,20 @@ def:pub get_parent(id: str) -> Project | None {
     }
     parents = [p <--][?:Project];
     return parents[0] if parents else None;
+}
+
+def:pub get_sub_projects(id: str) -> list[Project] {
+    p = get_project(id);
+    if p is None {
+        return [];
+    }
+    return [p-->][?:Project];
+}
+
+def:pub create_sub_project(parent_id: str, name: str, tldr: str) -> Project | None {
+    parent = get_project(parent_id);
+    if parent is None {
+        return None;
+    }
+    return parent.create_sub_project(name, tldr);
 }
