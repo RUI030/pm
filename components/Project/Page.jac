@@ -1,11 +1,11 @@
-import "../styles/main.css";
-import "../styles/Project.css";
-
 import from "@jac/runtime" { useParams, useNavigate }
 
 import from ...models.Project { Project, get_project, get_parent, plan_children }
 import from .Panel { Panel as ProjectPanel }
 import from ..Task.Panel { Panel as TaskPanel }
+import from ..ui.button { Button }
+import from ..ui.input { Input }
+import from ..ui.card { Card, CardHeader, CardTitle, CardDescription, CardContent }
 
 def:pub Page -> JsxElement {
     has project: Project | None = None;
@@ -55,44 +55,53 @@ def:pub Page -> JsxElement {
     }
 
     return
-        <div class="app">
-            <header class="header">
-                <div class="header-inner">
-                    <div class="logo" onClick={go_home}>PM<span>Space</span></div>
+        <div className="min-h-svh bg-background">
+            <header className="border-b border-border bg-card">
+                <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
+                    <div className="cursor-pointer text-xl font-semibold tracking-tight" onClick={go_home}>
+                        PM<span className="text-primary">Space</span>
+                    </div>
                 </div>
             </header>
-            <main class="page">
+            <main className="mx-auto flex max-w-5xl flex-col gap-8 px-6 py-8">
                 {(
-                    <div class="project-page-empty">Project not found.</div>
+                    <p className="text-muted-foreground">Project not found.</p>
                 ) if project is None else (
-                    <div>
-                        <div class="project-header">
-                            <button class="btn-ghost back-link" onClick={go_back}>
+                    <>
+                        <div className="flex flex-col gap-3">
+                            <Button variant="ghost" size="sm" className="self-start" onClick={go_back}>
                                 {"← Back to parent" if parent_id else "← All projects"}
-                            </button>
-                            <h1 class="project-header-name">{project.name}</h1>
-                            <p class="project-header-tldr">{project.tldr}</p>
+                            </Button>
+                            <h1 className="text-3xl font-semibold tracking-tight">{project.name}</h1>
+                            <p className="text-muted-foreground">{project.tldr}</p>
                         </div>
-                        <div class="panel-section new-form-wrapper">
-                            <div class="new-form-title">Plan with AI</div>
-                            <div class="new-form-row">
-                                <input
-                                    class="input"
-                                    value={plan_request}
-                                    onChange={lambda (e: ChangeEvent) { plan_request = e.target.value; }}
-                                    onKeyPress={lambda (e: KeyboardEvent) {
-                                        if e.key == "Enter" { run_plan(); }
-                                    }}
-                                    placeholder="Describe what needs to get done..."
-                                />
-                                <button class="btn-primary" onClick={run_plan}>
-                                    {"Planning..." if planning else "Plan"}
-                                </button>
-                            </div>
-                        </div>
+
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Plan with AI</CardTitle>
+                                <CardDescription>Describe the work and let the planner draft tasks and sub-projects.</CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                <div className="flex flex-col gap-3 sm:flex-row">
+                                    <Input
+                                        className="flex-1"
+                                        value={plan_request}
+                                        onChange={lambda (e: ChangeEvent) { plan_request = e.target.value; }}
+                                        onKeyPress={lambda (e: KeyboardEvent) {
+                                            if e.key == "Enter" { run_plan(); }
+                                        }}
+                                        placeholder="What needs to get done?"
+                                    />
+                                    <Button onClick={run_plan} disabled={planning}>
+                                        {"Planning..." if planning else "Plan"}
+                                    </Button>
+                                </div>
+                            </CardContent>
+                        </Card>
+
                         <TaskPanel key={"task-" + jid(project) + "-" + str(plan_version)} project_id={jid(project)} />
                         <ProjectPanel key={"project-" + jid(project) + "-" + str(plan_version)} parent_id={jid(project)} onSelectProject={select_sub_project} />
-                    </div>
+                    </>
                 )}
             </main>
         </div>;

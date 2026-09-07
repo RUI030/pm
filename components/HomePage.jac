@@ -1,6 +1,6 @@
-import "./styles/main.css";
-
 import from "@jac/runtime" { jacLogout, useNavigate }
+
+import from .ui.button { Button }
 import from .Project.Panel { Panel as ProjectPanel }
 
 def:pub HomePage -> JsxElement {
@@ -12,14 +12,16 @@ def:pub HomePage -> JsxElement {
     }
 
     return
-        <div class="app">
-            <header class="header">
-                <div class="header-inner">
-                    <div class="logo">PM<span>Space</span></div>
-                    <button class="btn-ghost" onClick={handle_logout}>Log out</button>
+        <div className="min-h-svh bg-background">
+            <header className="border-b border-border bg-card">
+                <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
+                    <div className="text-xl font-semibold tracking-tight">
+                        PM<span className="text-primary">Space</span>
+                    </div>
+                    <Button variant="ghost" onClick={handle_logout}>Log out</Button>
                 </div>
             </header>
-            <main class="page">
+            <main className="mx-auto max-w-5xl px-6 py-8">
                 <ProjectPanel />
             </main>
         </div>;

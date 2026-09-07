@@ -1,4 +1,7 @@
 import from ...models.Task { Task }
+import from ..ui.table { TableRow, TableCell }
+import from ..ui.button { Button }
+import from ..ui.badge { Badge }
 
 def:pub Item(
     task: Task,
@@ -18,21 +21,25 @@ def:pub Item(
     }
 
     return
-        <tr class={"task-row draft-row" if task.is_draft else "task-row"}>
-            <td class="task-alias">
-                {(<span class="draft-badge">Draft</span>) if task.is_draft else None}{task.alias}
-            </td>
-            <td class="task-title">{task.title}</td>
-            <td class="task-actions">
-                {(<button class="btn-primary" onClick={handle_approve}>Approve</button>)
-                    if task.is_draft and onApprove
-                    else None}{(
-                    <button class="btn-ghost delete-link" onClick={handle_delete}>
+        <TableRow>
+            <TableCell className="font-medium">
+                <div className="flex items-center gap-2">
+                    {(<Badge variant="secondary">Draft</Badge>) if task.is_draft else None}
+                    <span>{task.alias}</span>
+                </div>
+            </TableCell>
+            <TableCell className="text-muted-foreground">{task.title}</TableCell>
+            <TableCell className="text-right">
+                <div className="flex justify-end gap-2">
+                    {(<Button size="sm" variant="secondary" onClick={handle_approve}>Approve</Button>)
+                        if task.is_draft and onApprove
+                        else None}
+                    {(<Button size="sm" variant="ghost" onClick={handle_delete}>
                         {"Discard" if task.is_draft else "Delete"}
-                    </button>
-                )
-                    if onDelete
-                    else None}
-            </td>
-        </tr>;
+                    </Button>)
+                        if onDelete
+                        else None}
+                </div>
+            </TableCell>
+        </TableRow>;
 }

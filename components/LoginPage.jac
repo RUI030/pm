@@ -1,6 +1,10 @@
-import "./styles/main.css";
-
 import from "@jac/runtime" { jacLogin, jacSignup, jacIsLoggedIn, useNavigate, Navigate }
+
+import from .ui.card { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter }
+import from .ui.button { Button }
+import from .ui.input { Input }
+import from .ui.label { Label }
+import from .ui.field { Field, FieldLabel }
 
 def:pub LoginPage -> JsxElement {
     has email: str = "";
@@ -47,46 +51,51 @@ def:pub LoginPage -> JsxElement {
     }
 
     return
-        <div class="app">
-            <header class="header">
-                <div class="header-inner">
-                    <div class="logo">PM<span>Space</span></div>
-                </div>
-            </header>
-            <main class="page">
-                <div class="panel-section new-form-wrapper">
-                    <div class="new-form-title">{"Create account" if mode == "signup" else "Log in"}</div>
-                    <div class="new-form-row">
-                        <input
-                            class="input"
+        <div className="flex min-h-svh items-center justify-center bg-background p-6">
+            <Card className="w-full max-w-sm">
+                <CardHeader>
+                    <CardTitle>{"Create account" if mode == "signup" else "Welcome back"}</CardTitle>
+                    <CardDescription>
+                        {"Sign up to start tracking projects." if mode == "signup" else "Log in to your PMSpace workspace."}
+                    </CardDescription>
+                </CardHeader>
+                <CardContent className="flex flex-col gap-4">
+                    <Field>
+                        <FieldLabel htmlFor="email">Email</FieldLabel>
+                        <Input
+                            id="email"
+                            type="email"
                             value={email}
                             onChange={lambda (e: ChangeEvent) { email = e.target.value; }}
-                            placeholder="Email"
+                            placeholder="you@example.com"
                         />
-                        <input
-                            class="input"
+                    </Field>
+                    <Field>
+                        <FieldLabel htmlFor="password">Password</FieldLabel>
+                        <Input
+                            id="password"
                             type="password"
                             value={password}
                             onChange={lambda (e: ChangeEvent) { password = e.target.value; }}
                             onKeyPress={lambda (e: KeyboardEvent) {
                                 if e.key == "Enter" { submit(); }
                             }}
-                            placeholder="Password"
                         />
-                        <button class="btn-primary" onClick={submit}>
-                            {"Working..." if busy else ("Sign up" if mode == "signup" else "Log in")}
-                        </button>
-                    </div>
-                    {(<div class="project-page-empty">{status}</div>) if status else None}
-                    <div class="new-form-row">
-                        <button
-                            class="btn-ghost"
-                            onClick={lambda { mode = "login" if mode == "signup" else "signup"; status = ""; }}
-                        >
-                            {"Have an account? Log in" if mode == "signup" else "Need an account? Sign up"}
-                        </button>
-                    </div>
-                </div>
-            </main>
+                    </Field>
+                    {(<p className="text-sm text-destructive">{status}</p>) if status else None}
+                </CardContent>
+                <CardFooter className="flex flex-col gap-2">
+                    <Button className="w-full" onClick={submit} disabled={busy}>
+                        {"Working..." if busy else ("Sign up" if mode == "signup" else "Log in")}
+                    </Button>
+                    <Button
+                        className="w-full"
+                        variant="ghost"
+                        onClick={lambda { mode = "login" if mode == "signup" else "signup"; status = ""; }}
+                    >
+                        {"Have an account? Log in" if mode == "signup" else "Need an account? Sign up"}
+                    </Button>
+                </CardFooter>
+            </Card>
         </div>;
 }

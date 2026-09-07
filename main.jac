@@ -1,5 +1,7 @@
 """Main entry point for pm."""
 
+import "./styles/global.css";
+
 import from models.Project {
     Project,
     create_root_project,
@@ -7,9 +9,20 @@ import from models.Project {
     get_projects,
     get_project,
     get_parent,
-    get_sub_projects
+    get_sub_projects,
+    get_tasks,
+    create_task,
+    plan_children
 }
-import from walkers { Visitor, Cleaner, test_home, delete_project }
+import from walkers {
+    Visitor,
+    Cleaner,
+    test_home,
+    delete_project,
+    delete_task,
+    approve_project,
+    approve_task
+}
 
 import from "@jac/runtime" { Router, Routes, Route, AuthGuard }
 import from components.HomePage { HomePage }
