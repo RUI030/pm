@@ -24,35 +24,39 @@ node Project {
     }
 
     def:pub create_sub_project(name: str, tldr: str) -> Project {
-        project = self ++> Project(name=name, tldr=tldr);
+        project = Project(name=name, tldr=tldr);
+        self ++> project;
         print(f"[Create] Sub project {name}, parent is {self.name}");
-        return project[0];
+        return project;
     }
 
     def:pub create_task(title: str) -> Task {
-        task = self ++> Task(title=title);
+        task = Task(title=title);
+        self ++> task;
         try {
-            task[0].update_alias(task[0].gen_alias(task[0].get_title()));
+            task.update_alias(task.gen_alias(task.get_title()));
         } except Exception as e {
-            print(f"[Warn] alias generation failed for task {jid(task[0])}: {str(e)}");
+            print(f"[Warn] alias generation failed for task {jid(task)}: {str(e)}");
         }
-        print(f"[Create] task {task[0].get_alias()}, parent is {self.name}");
-        return task[0];
+        print(f"[Create] task {task.get_alias()}, parent is {self.name}");
+        return task;
     }
 
     def draft_task(title: str) -> Task {
-        task = self ++> Task(title=title, is_draft=True);
+        task = Task(title=title, is_draft=True);
+        self ++> task;
         try {
-            task[0].update_alias(task[0].gen_alias(task[0].get_title()));
+            task.update_alias(task.gen_alias(task.get_title()));
         } except Exception as e {
-            print(f"[Warn] alias generation failed for draft task {jid(task[0])}: {str(e)}");
+            print(f"[Warn] alias generation failed for draft task {jid(task)}: {str(e)}");
         }
-        return task[0];
+        return task;
     }
 
     def draft_sub_project(name: str, tldr: str) -> Project {
-        project = self ++> Project(name=name, tldr=tldr, is_draft=True);
-        return project[0];
+        project = Project(name=name, tldr=tldr, is_draft=True);
+        self ++> project;
+        return project;
     }
 
     def:pub plan(prompt: str) -> str by llm(tools=[self.draft_task, self.draft_sub_project]);
@@ -69,9 +73,10 @@ sem Project.plan = "Given a free-text request describing work to be done, decide
 sem Project.plan.prompt = "The user's free-text description of what they want done.";
 
 def:pub create_root_project(name: str, tldr: str) -> Project {
-    project = root ++> Project(name=name, tldr=tldr);
+    project = Project(name=name, tldr=tldr);
+    root ++> project;
     print(f"[Create] Root project {name}");
-    return project[0];
+    return project;
 }
 
 def:pub get_projects -> list[Project] {

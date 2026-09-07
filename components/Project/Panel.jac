@@ -1,7 +1,7 @@
 import "../styles/Project.css";
 
-sv import from ...models.Project { Project, create_root_project, create_sub_project, get_projects, get_sub_projects }
-sv import from ...walkers { delete_project, approve_project }
+import from ...models.Project { Project, create_root_project, create_sub_project, get_projects, get_sub_projects }
+import from ...walkers { delete_project, approve_project }
 import from .Item { Item as ProjectItem }
 
 def:pub Panel(parent_id: str | None = None, onSelectProject: Callable[([str], None)] | None = None) -> JsxElement {
@@ -76,19 +76,19 @@ def:pub Panel(parent_id: str | None = None, onSelectProject: Callable[([str], No
                         <input
                             class="input"
                             value={new_name}
-                            onChange={lambda e: ChangeEvent { new_name = e.target.value; }}
-                            onKeyPress={lambda e: KeyboardEvent {
-                                if e.key == "Enter" { add_project(); }}
-                            }
+                            onChange={lambda (e: ChangeEvent) { new_name = e.target.value; }}
+                            onKeyPress={lambda (e: KeyboardEvent) {
+                                if e.key == "Enter" { add_project(); }
+                            }}
                             placeholder="Project name"
                         />
                         <input
                             class="input"
                             value={new_tldr}
-                            onChange={lambda e: ChangeEvent { new_tldr = e.target.value; }}
-                            onKeyPress={lambda e: KeyboardEvent {
-                                if e.key == "Enter" { add_project(); }}
-                            }
+                            onChange={lambda (e: ChangeEvent) { new_tldr = e.target.value; }}
+                            onKeyPress={lambda (e: KeyboardEvent) {
+                                if e.key == "Enter" { add_project(); }
+                            }}
                             placeholder="What's the goal? (optional)"
                         />
                         <button class="btn-primary" onClick={add_project}>Create</button>

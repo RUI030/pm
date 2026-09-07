@@ -1,18 +1,30 @@
 """Main entry point for pm."""
 
-import from models.Project { Project, create_root_project, create_sub_project, get_projects, get_project, get_parent, get_sub_projects }
+import from models.Project {
+    Project,
+    create_root_project,
+    create_sub_project,
+    get_projects,
+    get_project,
+    get_parent,
+    get_sub_projects
+}
 import from walkers { Visitor, Cleaner, test_home, delete_project }
 
-cl import from "@jac/runtime" { Router, Routes, Route }
-cl import from components.HomePage { HomePage }
-cl import from components.Project.Page { Page as ProjectPage }
+import from "@jac/runtime" { Router, Routes, Route, AuthGuard }
+import from components.HomePage { HomePage }
+import from components.LoginPage { LoginPage }
+import from components.Project.Page { Page as ProjectPage }
 
-cl def:pub app -> JsxElement {
+def:pub app -> JsxElement {
     return
         <Router>
             <Routes>
-                <Route path="/" element={<HomePage />} />
-                <Route path="/project/:id" element={<ProjectPage />} />
+                <Route path="/login" element={<LoginPage/>}/>
+                <Route element={<AuthGuard redirect="/login"/>}>
+                    <Route path="/" element={<HomePage/>}/>
+                    <Route path="/project/:id" element={<ProjectPage/>}/>
+                </Route>
             </Routes>
         </Router>;
 }

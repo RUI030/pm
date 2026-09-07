@@ -30,3 +30,7 @@ base_route_app = "app"
 
 [plugins.byllm.model]
 default_model = "gemini/gemini-2.5-flash"
+
+[scale.microservices.routes]
+"Project" = "/Project"
+"Task" = "/Task"

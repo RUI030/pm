@@ -3,7 +3,7 @@ import "../styles/Project.css";
 
 import from "@jac/runtime" { useParams, useNavigate }
 
-sv import from ...models.Project { Project, get_project, get_parent, plan_children }
+import from ...models.Project { Project, get_project, get_parent, plan_children }
 import from .Panel { Panel as ProjectPanel }
 import from ..Task.Panel { Panel as TaskPanel }
 
@@ -79,10 +79,10 @@ def:pub Page -> JsxElement {
                                 <input
                                     class="input"
                                     value={plan_request}
-                                    onChange={lambda e: ChangeEvent { plan_request = e.target.value; }}
-                                    onKeyPress={lambda e: KeyboardEvent {
-                                        if e.key == "Enter" { run_plan(); }}
-                                    }
+                                    onChange={lambda (e: ChangeEvent) { plan_request = e.target.value; }}
+                                    onKeyPress={lambda (e: KeyboardEvent) {
+                                        if e.key == "Enter" { run_plan(); }
+                                    }}
                                     placeholder="Describe what needs to get done..."
                                 />
                                 <button class="btn-primary" onClick={run_plan}>

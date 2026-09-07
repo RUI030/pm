@@ -1,5 +1,5 @@
 import from "@jac/runtime" { Navigate }
-sv import from ..models.Project { get_projects }
+import from ..models.Project { get_projects }
 
 def:pub TestHome -> JsxElement {
     has first_id: str | None = None;
@@ -14,5 +14,5 @@ def:pub TestHome -> JsxElement {
     if first_id is None {
         return <div>No projects yet.</div>;
     }
-    return <Navigate to={"/project/" + first_id} replace={True} />;
+    return <Navigate to={"/project/" + first_id} replace={True}/>;
 }

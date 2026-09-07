@@ -1,8 +1,8 @@
 import "../styles/Task.css";
 
-sv import from ...models.Task { Task }
-sv import from ...models.Project { get_tasks, create_task }
-sv import from ...walkers { delete_task, approve_task }
+import from ...models.Task { Task }
+import from ...models.Project { get_tasks, create_task }
+import from ...walkers { delete_task, approve_task }
 import from .Item { Item as TaskItem }
 
 def:pub Panel(project_id: str) -> JsxElement {
@@ -66,10 +66,10 @@ def:pub Panel(project_id: str) -> JsxElement {
                         <input
                             class="input"
                             value={new_title}
-                            onChange={lambda e: ChangeEvent { new_title = e.target.value; }}
-                            onKeyPress={lambda e: KeyboardEvent {
-                                if e.key == "Enter" { add_task(); }}
-                            }
+                            onChange={lambda (e: ChangeEvent) { new_title = e.target.value; }}
+                            onKeyPress={lambda (e: KeyboardEvent) {
+                                if e.key == "Enter" { add_task(); }
+                            }}
                             placeholder="Task title"
                         />
                         <button class="btn-primary" onClick={add_task}>Create</button>
