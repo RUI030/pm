@@ -24,12 +24,15 @@ import from walkers {
     approve_task
 }
 
-import from "@jac/runtime" { Router, Routes, Route, AuthGuard }
+import from "@jac/runtime" { Router, Routes, Route, AuthGuard, useEffect }
 import from components.HomePage { HomePage }
 import from components.LoginPage { LoginPage }
 import from components.Project.Page { Page as ProjectPage }
 
 def:pub app -> JsxElement {
+    useEffect(lambda {
+        document.documentElement.classList.add("dark");
+    }, []);
     return
         <Router>
             <Routes>
